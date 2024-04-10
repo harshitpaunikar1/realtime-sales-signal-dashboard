@@ -16,3 +16,7 @@
 
 - Task summary: By this point I had the rough direction, so the work became more practical. I spent most of the day trying to choose a realistic first version with only the core use cases and make the whole thing feel less half baked. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. I kept imagining how an actual operator would move through the steps so the project would not feel fake.
 - Deliverable: I wrapped up the day with version 1 scope mostly in place. It was not perfect, but it was good enough to keep the project moving. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
+## 2024-04-10 - Day 3: Scope pass
+
+- Task summary: Quick follow-up: fixed the README section that was missing the setup step — embarrassing oversight.
+- Deliverable: Should've caught it earlier but better now than later.
