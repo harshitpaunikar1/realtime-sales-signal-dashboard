@@ -20,3 +20,7 @@
 
 - Task summary: Quick follow-up: fixed the README section that was missing the setup step — embarrassing oversight.
 - Deliverable: Should've caught it earlier but better now than later.
+## 2024-04-11 - Day 4: User stories
+
+- Task summary: By this point I had the rough direction, so the work became more practical. I spent most of the day trying to write plain user stories for operators, managers, or admins and make the whole thing feel less half baked. By now I had enough structure to keep going without staring at the screen too long, which honestly helped a lot. This kind of project only works if the logic feels practical, so I spent time checking the flow again and again.
+- Deliverable: I wrapped up the day with user story list mostly in place. It was not perfect, but it was good enough to keep the project moving. There were still a couple of loose parts, but nothing serious enough to block the next step.
