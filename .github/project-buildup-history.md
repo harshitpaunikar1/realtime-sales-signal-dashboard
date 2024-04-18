@@ -44,3 +44,7 @@
 
 - Task summary: Spent another hour on this: resolved a merge conflict that came up when I switched branches to check something else.
 - Deliverable: Good enough to not be embarrassing.
+## 2024-04-18 - Day 9: Operational rules
+
+- Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to add validation, business rules, and edge cases from the workflow map so the final result looked a bit more complete. The middle part always takes longer than it should, mostly becuase one fix usually reveals two more things to clean up. I kept imagining how an actual operator would move through the steps so the project would not feel fake.
+- Deliverable: Ended the day with rules and constraints in hand, plus a few side notes on what still needed fixing later. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
