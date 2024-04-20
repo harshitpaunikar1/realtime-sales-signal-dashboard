@@ -56,3 +56,7 @@
 
 - Task summary: Got stuck mid-afternoon and had to regroup — added inline comments in the dense sections — would have been confusing to revisit without them.
 - Deliverable: Wrapped it up properly this time.
+## 2024-04-20 - Day 9: Operational rules
+
+- Task summary: Spent an hour on Sunday afternoon revisiting the config. Found a value that was set wrong from an earlier experiment. Fixed and committed.
+- Deliverable: Small fix, clean result.
