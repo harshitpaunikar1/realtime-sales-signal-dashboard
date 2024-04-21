@@ -60,3 +60,7 @@
 
 - Task summary: Spent an hour on Sunday afternoon revisiting the config. Found a value that was set wrong from an earlier experiment. Fixed and committed.
 - Deliverable: Small fix, clean result.
+## 2024-04-21 - Day 10: Artifacts
+
+- Task summary: Weekend fix — the visualizations had overlapping labels in narrow viewports. Adjusted the figure size and padding.
+- Deliverable: Wrapped it up properly this time.
