@@ -64,3 +64,7 @@
 
 - Task summary: Weekend fix — the visualizations had overlapping labels in narrow viewports. Adjusted the figure size and padding.
 - Deliverable: Wrapped it up properly this time.
+## 2024-04-22 - Day 11: Documentation check
+
+- Task summary: Closer to the end, I was mostly tightening things up instead of inventing new scope. The job for the day was to write the README with problem, scope, workflow, and usage notes so the final result looked a bit more complete. I was not trying to add anything fancy here, just making sure the thing looked complete enough to show someone. A lot of the work here was really about workflow thinking, not just screens or files.
+- Deliverable: Ended the day with documented project in hand, plus a few side notes on what still needed fixing later. It was not super polished, just stable enough that I felt okay moving forward.
