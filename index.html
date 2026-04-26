@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Sales Signal Dashboard | Field Operations Monitoring</title>
+  <meta name="description" content="A black-and-white field-operations article on how delayed field reporting becomes a live territory signal dashboard for sales and marketing leaders.">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --panel: #ffffff;
+      --ink: #0a0a0a;
+      --muted: #5e5e5e;
+      --line: #cfcfcf;
+      --line-strong: #8b8b8b;
+      --shade-1: #ebebeb;
+      --shade-2: #d8d8d8;
+      --shade-3: #b7b7b7;
+      --shade-4: #8f8f8f;
+      --shade-5: #5a5a5a;
+      --shade-6: #1a1a1a;
+      --shadow: 0 22px 44px rgba(0, 0, 0, 0.08);
+      --radius-xl: 30px;
+      --radius-lg: 20px;
+      --radius-sm: 10px;
+      --max: 1480px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", sans-serif;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #f2f2f2 18%, #ededed 100%);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at top left, #ffffff 0%, #f0f0f0 45%, #e7e7e7 100%);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar .label,
+    .kicker,
+    .panel-tag,
+    .eyebrow,
+    .metric-label,
+    .caption,
+    .table-label,
+    figcaption,
+    .chip,
+    .code-note {
+      font-family: "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+    }
+
+    .topbar .label {
+      color: var(--muted);
+    }
+
+    .topbar .stamp {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.35fr;
+      gap: 0;
+      min-height: 620px;
+    }
+
+    .hero-copy {
+      padding: 34px 28px 26px;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .lead {
+      font-size: 1.08rem;
+      color: #202020;
+      max-width: 58ch;
+    }
+
+    .scenario {
+      padding: 18px 18px 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 116px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .scenario-time {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 1.65rem;
+      padding: 12px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .scenario p {
+      margin: 0;
+      color: #1e1e1e;
+    }
+
+    .hero-map {
+      position: relative;
+      padding: 24px 24px 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.62) 0%, rgba(233, 233, 233, 0.96) 100%);
+    }
+
+    .hero-map .map-frame {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .metric-ribbon {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 0;
+    }
+
+    .metric {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      min-height: 88px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.8rem;
+      line-height: 1;
+      margin: 5px 0 8px;
+      letter-spacing: -0.04em;
+    }
+
+    .metric-label {
+      color: var(--muted);
+    }
+
+    .metric small {
+      display: block;
+      color: #373737;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .story {
+      display: grid;
+      gap: 20px;
+    }
+
+    .sidebar {
+      align-self: start;
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel,
+    .sidebar-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-inner,
+    .sidebar-card-inner {
+      padding: 26px 26px 28px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2vw, 1.75rem);
+      letter-spacing: -0.03em;
+    }
+
+    .panel-tag {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .deck {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin-top: -4px;
+    }
+
+    .two-col,
+    .detail-grid,
+    .action-grid,
+    .monitor-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .two-col {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: start;
+    }
+
+    p {
+      margin: 0 0 1em;
+    }
+
+    p:last-child,
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .callout,
+    .micro-panel,
+    .ops-card,
+    .stat-card,
+    .wire-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 100%);
+    }
+
+    .callout {
+      padding: 18px;
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .detail-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .stat-card {
+      padding: 16px;
+      min-height: 148px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.5rem;
+      letter-spacing: -0.04em;
+      margin: 8px 0;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    figcaption,
+    .caption {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .code-block {
+      margin: 18px 0;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .code-note {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      background: #f1f1f1;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: #171717;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    .flow-figure,
+    .map-figure {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #efefef 100%);
+    }
+
+    .monitor-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .wire-panel {
+      padding: 16px;
+      min-height: 248px;
+    }
+
+    .wire-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .bar-stack,
+    .timeline-stack,
+    .alert-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 104px 1fr 56px;
+      gap: 10px;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+    }
+
+    .bar {
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: #ececec;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1a1a1a 0%, #6f6f6f 100%);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      align-items: end;
+      height: 120px;
+      margin-top: 10px;
+    }
+
+    .timeline span {
+      display: block;
+      border-radius: 12px 12px 3px 3px;
+      background: linear-gradient(180deg, #7c7c7c 0%, #1b1b1b 100%);
+    }
+
+    .alert-row {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .alert-row strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .alert-band {
+      height: 10px;
+      border-radius: 999px;
+      background:
+        linear-gradient(
+          90deg,
+          #111111 0%,
+          #111111 20%,
+          #5d5d5d 20%,
+          #5d5d5d 50%,
+          #9c9c9c 50%,
+          #9c9c9c 78%,
+          #d5d5d5 78%,
+          #d5d5d5 100%
+        );
+      border: 1px solid var(--line-strong);
+    }
+
+    .action-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .ops-card {
+      padding: 16px;
+      min-height: 180px;
+    }
+
+    .ops-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .sidebar-card nav a {
+      display: block;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+      color: #1f1f1f;
+    }
+
+    .sidebar-card nav a:last-child {
+      border-bottom: 0;
+    }
+
+    .mini-metrics {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini-metrics .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.76rem;
+      color: #202020;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mini-metrics .row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .footer-note {
+      padding: 24px 28px 30px;
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, #efefef 0%, #f9f9f9 100%);
+      color: #212121;
+    }
+
+    @media (max-width: 1180px) {
+      .hero-grid,
+      main,
+      .two-col,
+      .detail-grid,
+      .monitor-grid,
+      .action-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(calc(100% - 18px), var(--max));
+        padding-top: 10px;
+      }
+
+      .topbar,
+      .panel-inner,
+      .sidebar-card-inner,
+      .hero-copy,
+      .hero-map,
+      .footer-note {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      h1 {
+        font-size: 2.35rem;
+      }
+
+      .metric-ribbon {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .scenario {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-row {
+        grid-template-columns: 86px 1fr 46px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero" id="top">
+      <div class="topbar">
+        <div>
+          <div class="label">Field Operations Monitoring Article</div>
+        </div>
+        <div class="stamp">
+          <span class="chip">Monochrome Layout</span>
+          <span class="chip">Secure Mobile Inputs</span>
+          <span class="chip">Python Stream + Tableau</span>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <section class="hero-copy">
+          <div>
+            <div class="eyebrow">Black-and-white territory briefing for sales and marketing leaders</div>
+            <h1>Real-Time Sales Signal Dashboard</h1>
+            <p class="lead">At 08:40 on a Monday, the territory manager for the north belt does not have a market problem yet. She has a visibility problem. Fifteen stores were visited before breakfast, two promoters reported display stockouts, one distributor delayed van loading, and three high-intent retail counters asked for callback pricing. None of that is visible in the morning meeting because the reporting chain still depends on end-of-day sheets, forwarded screenshots, and memory. By the time the numbers land, the route is over, the shelf has been lost, and a preventable dip in pipeline velocity gets explained away as “market softness.”</p>
+            <p class="lead">This dashboard exists to close that blind window. It captures field submissions at the point of work, transforms them into standardized signals, and surfaces a live territory picture that a manager can act on before lunch. The article is not about abstract BI uplift. It is about which district requires a second van, which promoter needs coaching, which campaign should be held back because display compliance is slipping, and which exception deserves a direct call right now.</p>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario-time">08:40</div>
+            <p><strong>Scenario:</strong> a rep files a mobile visit report from a pharmacy cluster after finding missing promotional material in four stores and a faster-than-expected conversion rate in a fifth. Without live intake, the manager hears about the issue after the afternoon review. With live intake, the same signal moves through validation, de-duplication, enrichment, storage, and Tableau refresh in minutes, turning a latent problem into an operating decision.</p>
+          </div>
+        </section>
+
+        <section class="hero-map" aria-labelledby="map-caption">
+          <div class="map-frame">
+            <div class="metric-ribbon" aria-label="Key operating metrics">
+              <div class="metric">
+                <div class="metric-label">Median field-to-view lag</div>
+                <strong>6m</strong>
+                <small>Measured from mobile submit to dashboard tile refresh.</small>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Verified submissions</div>
+                <strong>94%</strong>
+                <small>Accepted after schema, identifier, and timestamp checks.</small>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Duplicate events blocked</div>
+                <strong>3.8%</strong>
+                <small>Webhook retries and double taps removed before storage.</small>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Manager action queue</div>
+                <strong>12</strong>
+                <small>Territory exceptions open across stock, visit, and lead bands.</small>
+              </div>
+            </div>
+
+            <figure class="map-figure">
+              <svg viewBox="0 0 860 540" role="img" aria-labelledby="map-title map-caption">
+                <title id="map-title">Monochrome territory pulse map feeding dashboard tiles and alert bands</title>
+                <rect x="10" y="10" width="840" height="520" rx="26" fill="#fbfbfb" stroke="#d2d2d2"/>
+                <rect x="34" y="34" width="500" height="472" rx="22" fill="#f0f0f0" stroke="#c4c4c4"/>
+                <text x="58" y="64" font-family="IBM Plex Mono" font-size="13" letter-spacing="2" fill="#656565">TERRITORY PULSE MAP</text>
+                <path d="M86 126 L172 82 L255 104 L276 166 L232 216 L150 226 L96 184 Z" fill="#242424"/>
+                <path d="M176 240 L260 216 L338 252 L320 334 L250 370 L178 332 Z" fill="#666666"/>
+                <path d="M312 122 L414 102 L472 156 L446 236 L360 250 L280 168 Z" fill="#a4a4a4"/>
+                <path d="M356 272 L458 258 L498 332 L458 424 L364 404 L316 332 Z" fill="#444444"/>
+                <path d="M110 320 L164 288 L232 334 L224 424 L134 442 L88 378 Z" fill="#bdbdbd"/>
+                <circle cx="174" cy="170" r="9" fill="#ffffff" stroke="#111111" stroke-width="3"/>
+                <circle cx="226" cy="286" r="9" fill="#ffffff" stroke="#111111" stroke-width="3"/>
+                <circle cx="388" cy="180" r="9" fill="#111111"/>
+                <circle cx="410" cy="324" r="9" fill="#111111"/>
+                <circle cx="152" cy="366" r="9" fill="#ffffff" stroke="#111111" stroke-width="3"/>
+                <path d="M183 170 C248 170 262 138 312 146" fill="none" stroke="#2b2b2b" stroke-width="3" stroke-dasharray="6 6"/>
+                <path d="M236 286 C294 286 322 298 352 310" fill="none" stroke="#5c5c5c" stroke-width="3" stroke-dasharray="6 6"/>
+                <path d="M419 180 C490 176 510 176 548 164" fill="none" stroke="#2b2b2b" stroke-width="3"/>
+                <path d="M420 324 C494 332 522 340 548 352" fill="none" stroke="#2b2b2b" stroke-width="3"/>
+                <g transform="translate(560 54)">
+                  <rect x="0" y="0" width="266" height="126" rx="18" fill="#ffffff" stroke="#c9c9c9"/>
+                  <text x="18" y="26" font-family="IBM Plex Mono" font-size="12" letter-spacing="2" fill="#656565">LIVE TILE FEED</text>
+                  <text x="18" y="58" font-family="IBM Plex Sans" font-size="16" font-weight="700" fill="#111111">North Belt</text>
+                  <text x="18" y="78" font-family="IBM Plex Sans" font-size="12" fill="#454545">Visit completion 91% / display</text>
+                  <text x="18" y="93" font-family="IBM Plex Sans" font-size="12" fill="#454545">compliance below band</text>
+                  <rect x="18" y="96" width="180" height="12" rx="6" fill="#ececec" stroke="#b2b2b2"/>
+                  <rect x="18" y="96" width="122" height="12" rx="6" fill="#1a1a1a"/>
+                </g>
+                <g transform="translate(560 198)">
+                  <rect x="0" y="0" width="266" height="126" rx="18" fill="#ffffff" stroke="#c9c9c9"/>
+                  <text x="18" y="26" font-family="IBM Plex Mono" font-size="12" letter-spacing="2" fill="#656565">PIPELINE TILE</text>
+                  <text x="18" y="58" font-family="IBM Plex Sans" font-size="16" font-weight="700" fill="#111111">West Corridor</text>
+                  <text x="18" y="78" font-family="IBM Plex Sans" font-size="12" fill="#454545">High lead quality / callback gap</text>
+                  <text x="18" y="93" font-family="IBM Plex Sans" font-size="12" fill="#454545">at distributor handoff</text>
+                  <rect x="18" y="96" width="206" height="12" rx="6" fill="#ececec" stroke="#b2b2b2"/>
+                  <rect x="18" y="96" width="166" height="12" rx="6" fill="#4c4c4c"/>
+                </g>
+                <g transform="translate(560 344)">
+                  <rect x="0" y="0" width="266" height="126" rx="18" fill="#ffffff" stroke="#c9c9c9"/>
+                  <text x="18" y="26" font-family="IBM Plex Mono" font-size="12" letter-spacing="2" fill="#656565">ALERT BAND</text>
+                  <text x="18" y="58" font-family="IBM Plex Sans" font-size="16" font-weight="700" fill="#111111">Action Priority</text>
+                  <rect x="18" y="76" width="228" height="16" rx="8" fill="#eaeaea" stroke="#9e9e9e"/>
+                  <rect x="18" y="76" width="52" height="16" rx="8" fill="#111111"/>
+                  <rect x="70" y="76" width="74" height="16" rx="0" fill="#555555"/>
+                  <rect x="144" y="76" width="56" height="16" rx="0" fill="#9c9c9c"/>
+                  <rect x="200" y="76" width="46" height="16" rx="8" fill="#d9d9d9"/>
+                  <text x="18" y="112" font-family="IBM Plex Sans" font-size="12" fill="#3f3f3f">4 stock outages, 3 route gaps,</text>
+                  <text x="18" y="126" font-family="IBM Plex Sans" font-size="12" fill="#3f3f3f">5 lead aging exceptions</text>
+                </g>
+              </svg>
+              <figcaption id="map-caption">Figure 1. A simplified regional layout drives live dashboard tiles rather than sitting as a decorative heatmap. Darker territories indicate stronger signal intensity; white outlined nodes indicate field reports that still require manager acknowledgement before the alert band clears.</figcaption>
+            </figure>
+          </div>
+        </section>
+      </div>
+
+      <div class="footer-note">The operating value is not the map itself. The value is the reduction in doubt between what a rep saw on the ground and what a territory manager can decide from headquarters while the route is still alive.</div>
+    </header>
+
+    <main>
+      <article class="story">
+        <section class="panel" id="blindness">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <h2>Panel 01 / Blind Window</h2>
+              <div class="panel-tag">Delayed reporting hides active territory risk</div>
+            </div>
+            <p class="deck">The first problem is not modeling sophistication. It is the operating blindness created by delayed field reporting.</p>
+            <div class="two-col">
+              <div>
+                <p>In most field organizations, a route produces more commercial evidence than headquarters can process in real time. Reps send store observations, lead details, display checks, stock positions, and next-step notes through a mix of forms, messages, and phone calls. Each fragment is useful, but none is reliable enough on its own to move budgets, reassign promoters, or escalate a distributor. The manager sees fragments, then waits for a sheet. That sheet shows totals, but it strips out the timing and sequence that explain why a territory shifted in the first place.</p>
+                <p>That delay matters because field performance is path dependent. If the first three outlets on a route report missing point-of-sale material, the fourth outlet is not just another visit. It is confirmation that the issue is systemic and likely tied to dispatch or merchandising execution. If a rep flags strong conversion in an unexpected cluster before noon, the marketing leader can still keep the same-day digital campaign pointed at that pocket. If the report lands after 18:00, the day is gone. The dashboard therefore begins with a hard operational question: what decisions are being made late because the signal arrives late?</p>
+                <p>For sales and marketing leaders, the answer is concrete. Route priorities are set with stale assumptions. Lead aging is mistaken for poor rep execution when the real cause is delayed callback ownership. Trade offers remain live in territories where display compliance has already fallen below threshold. Inventory transfers are approved a day late because stockout chatter never became a verified event. The cost is not only missed revenue; it is the erosion of managerial confidence in the field narrative itself.</p>
+              </div>
+              <aside class="callout">
+                <strong>What the territory manager needs by mid-morning</strong>
+                <ul>
+                  <li>A verified count of completed visits against planned route.</li>
+                  <li>Exception flags for stock, display, lead follow-up, and timestamp drift.</li>
+                  <li>A ranked list of territories where intervention still changes the day.</li>
+                  <li>Enough audit detail to trust the signal before calling the field.</li>
+                </ul>
+              </aside>
+            </div>
+            <div class="detail-grid">
+              <div class="stat-card">
+                <div class="metric-label">Blindness source</div>
+                <strong>Fragmented submissions</strong>
+                <p>Mobile forms, secure webhooks, and manual callback notes arrive at different moments and with different identifiers.</p>
+              </div>
+              <div class="stat-card">
+                <div class="metric-label">Operational cost</div>
+                <strong>Late intervention</strong>
+                <p>By the time a manager sees a route collapse, the promoter shift, van dispatch, or offer adjustment has already missed its useful window.</p>
+              </div>
+              <div class="stat-card">
+                <div class="metric-label">Design response</div>
+                <strong>Live, standard signal</strong>
+                <p>Every event must be normalized, checked, and tied to a known territory so the dashboard reflects the market instead of narrative drift.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="capture">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <h2>Panel 02 / Signal Intake</h2>
+              <div class="panel-tag">Mobile submissions become comparable events</div>
+            </div>
+            <p>The dashboard is only as good as the discipline of capture. Reps and promoters submit from the field through secure APIs and webhooks tied to known users, territory identifiers, and route plans. The point is not to force one rigid mobile experience; it is to force one event grammar underneath varied experiences. A stockout, a qualified lead, a display miss, and a competitor sighting can be entered from different screens, but they need to arrive in a payload structure that the stream layer can trust.</p>
+            <p>The intake step therefore standardizes identity first. Outlet code, distributor code, rep ID, supervisor ID, territory ID, timestamp, event type, and source channel all travel with the event. Optional narrative remains optional. Known keys are not optional. That is what lets a sales leader compare west corridor display compliance with south cluster callback velocity without spending the meeting arguing over whose sheet is right.</p>
+            <p>Standardization also protects against false urgency. A field message that says “urgent stock issue” is not yet an operating signal. The stream needs to know whether the same outlet has already reported the issue, whether the event occurred inside the expected route window, whether the rep device clock is drifting, and whether the outlet belongs to the same territory shown on the plan. Only then does the message deserve to occupy dashboard space and manager attention.</p>
+
+            <div class="code-block">
+              <div class="code-note">Normalization example: secure payload becomes a stable field event</div>
+<pre><code>def normalize_event(payload):
+    event = {
+        "event_id": payload["submission_id"],
+        "territory_id": payload["territory_code"].strip().upper(),
+        "outlet_id": payload["outlet_code"],
+        "rep_id": payload["rep_user_id"],
+        "event_type": payload["activity_type"].lower(),
+        "occurred_at": parse_ts(payload["captured_at"]),
+        "reported_at": parse_ts(payload["received_at"]),
+        "source": payload["channel"],
+        "value": payload.get("value"),
+    }
+    event["lag_minutes"] = minutes_between(event["occurred_at"], event["reported_at"])
+    return event</code></pre>
+            </div>
+
+            <p>That small normalization step has direct management consequences. If outlet and territory are stable, the north belt manager can trust territory counts without waiting for reconciliation. If occurred time and reported time are both preserved, leaders can separate slow market response from slow reporting behavior. If source channel is retained, data quality discussions stop being anecdotal and start becoming measurable by workflow.</p>
+          </div>
+        </section>
+
+        <section class="panel" id="transform">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <h2>Panel 03 / Stream Conditioning</h2>
+              <div class="panel-tag">Validate, deduplicate, enrich, store</div>
+            </div>
+            <p>The Python streaming layer is where the field signal stops being raw and starts being operational. It validates schema, rejects malformed identifiers, checks timestamp drift, drops or merges duplicates, and enriches each accepted event with route plan data, account priority, campaign phase, and managerial ownership. What looks like back-end hygiene is actually the foundation for trust. If duplicates survive, managers chase noise. If timestamps drift unnoticed, the dashboard rewards the fastest phone sync rather than the earliest field observation.</p>
+            <p>Deduplication is especially important in mobile field workflows because reps retry when coverage is unstable. A webhook retried by the device, a manual double tap, and an intermediary integration replay can all generate visually identical submissions. The streaming layer needs to collapse those into one truth before storage and Tableau refresh. Otherwise a single outlet issue can appear as a multi-store failure and trigger the wrong response.</p>
+            <p>Enrichment adds the context needed for action. A bare lead event means little; a lead event tied to a premium outlet, a lapsed campaign cohort, and a distributor backlog is a management cue. A display miss in a low-volume corner shop may require a supervisor note. The same miss inside a launch cluster may justify rerouting merchandising support before afternoon footfall begins.</p>
+
+            <div class="code-block">
+              <div class="code-note">Thresholding example: route priority emerges from verified exceptions</div>
+<pre><code>def territory_priority(events):
+    stockouts = sum(e["event_type"] == "stockout" for e in events)
+    display_misses = sum(e["event_type"] == "display_miss" for e in events)
+    aging_leads = sum(e["lead_age_hours"] &gt; 4 for e in events if "lead_age_hours" in e)
+    score = stockouts * 5 + display_misses * 3 + aging_leads * 2
+    return "act_now" if score &gt;= 12 else "watch" if score &gt;= 6 else "stable"</code></pre>
+            </div>
+
+            <figure class="flow-figure">
+              <svg viewBox="0 0 1160 240" role="img" aria-labelledby="flow-title flow-caption">
+                <title id="flow-title">Slim flow from mobile submission to Tableau refresh</title>
+                <rect x="14" y="28" width="1132" height="184" rx="28" fill="#fbfbfb" stroke="#d0d0d0"/>
+                <text x="38" y="58" font-family="IBM Plex Mono" font-size="13" letter-spacing="2" fill="#696969">MOBILE SUBMISSION TO TABLEAU REFRESH</text>
+                <g transform="translate(38 88)">
+                  <rect x="0" y="0" width="166" height="76" rx="18" fill="#111111"/>
+                  <text x="18" y="28" font-family="IBM Plex Mono" font-size="11" letter-spacing="1.8" fill="#d8d8d8">1 / MOBILE CAPTURE</text>
+                  <text x="18" y="50" font-family="IBM Plex Sans" font-size="15" font-weight="700" fill="#ffffff">Visit, stock, lead, display</text>
+                </g>
+                <g transform="translate(256 88)">
+                  <rect x="0" y="0" width="166" height="76" rx="18" fill="#4b4b4b"/>
+                  <text x="18" y="28" font-family="IBM Plex Mono" font-size="11" letter-spacing="1.8" fill="#dedede">2 / API + WEBHOOK</text>
+                  <text x="18" y="50" font-family="IBM Plex Sans" font-size="15" font-weight="700" fill="#ffffff">Secure payload receipt</text>
+                </g>
+                <g transform="translate(474 88)">
+                  <rect x="0" y="0" width="166" height="76" rx="18" fill="#757575"/>
+                  <text x="18" y="28" font-family="IBM Plex Mono" font-size="11" letter-spacing="1.8" fill="#f4f4f4">3 / PYTHON STREAM</text>
+                  <text x="18" y="50" font-family="IBM Plex Sans" font-size="15" font-weight="700" fill="#ffffff">Validate + deduplicate</text>
+                </g>
+                <g transform="translate(692 88)">
+                  <rect x="0" y="0" width="166" height="76" rx="18" fill="#aaaaaa"/>
+                  <text x="18" y="28" font-family="IBM Plex Mono" font-size="11" letter-spacing="1.8" fill="#232323">4 / ENRICH + STORE</text>
+                  <text x="18" y="50" font-family="IBM Plex Sans" font-size="15" font-weight="700" fill="#121212">Territory-ready tables</text>
+                </g>
+                <g transform="translate(910 88)">
+                  <rect x="0" y="0" width="198" height="76" rx="18" fill="#e4e4e4" stroke="#909090"/>
+                  <text x="18" y="28" font-family="IBM Plex Mono" font-size="11" letter-spacing="1.8" fill="#414141">5 / TABLEAU REFRESH</text>
+                  <text x="18" y="50" font-family="IBM Plex Sans" font-size="15" font-weight="700" fill="#121212">Heatmaps, velocity, alerts</text>
+                </g>
+                <path d="M206 126 H246" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+                <path d="M424 126 H464" stroke="#444444" stroke-width="4" stroke-linecap="round"/>
+                <path d="M642 126 H682" stroke="#666666" stroke-width="4" stroke-linecap="round"/>
+                <path d="M860 126 H900" stroke="#8d8d8d" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+              <figcaption id="flow-caption">Figure 2. The flow is intentionally slim because the operating requirement is speed with control: secure submission, validation, de-duplication, enrichment, and a Tableau refresh that exposes fresh conditions before the route loses value.</figcaption>
+            </figure>
+
+            <p>Data quality checks and audit logs sit alongside this path, not after it. Power users in UAT need to click from a territory tile into the underlying submissions and see why an event was accepted, held, or merged. Without that trace, a manager may still have a pretty dashboard but no practical confidence to act on it.</p>
+          </div>
+        </section>
+
+        <section class="panel" id="views">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <h2>Panel 04 / Dashboard Surface</h2>
+              <div class="panel-tag">Map, velocity, alerts, and quality views</div>
+            </div>
+            <p>Once the signal is cleaned, the dashboard has to show a manager what to do next, not merely what happened. The territory heatmap is the entry view because managers think spatially. They do not ask first for a SQL table of accepted events. They ask which district is drifting, which corridor is improving, and where the current plan is failing. The map answers that by combining verified field activity, route completion, compliance, and lead momentum into a single territory pulse.</p>
+            <p>The second view is pipeline velocity. Field operations often create demand faster than the callback process can absorb it. A territory can show high visit completion and still underperform because hot leads wait too long for commercial follow-up. Velocity panels make this visible by showing the movement from field capture to qualified pipeline to callback completion. For the manager, the signal is useful because it separates a route execution issue from a follow-up ownership issue. The remedy changes accordingly.</p>
+            <p>The third view is the alert tile set. Alerts are not generic threshold lights. They are compact decision packages: stockout density above threshold in east cluster, distributor delay causing route compression in north belt, lead aging beyond four hours in premium accounts, timestamp drift above tolerance for one device cohort, or duplicate rate spike from a webhook source. Each alert points to an owner and suggests an immediate class of response.</p>
+            <p>The quality view matters just as much as the commercial views because leadership confidence depends on being able to separate market change from data collection noise. Sales heads want faster route visibility. Marketing leaders want to know whether campaign response is real enough to shift spend or creative emphasis inside the same trading window. Both decisions become unsafe if the dashboard hides drift, retries, or route-plan mismatches. Showing trust indicators beside territory and velocity panels keeps action aggressive without making it careless.</p>
+
+            <div class="monitor-grid">
+              <section class="wire-panel">
+                <div class="wire-head">
+                  <span>Territory heatmap tile</span>
+                  <span>Manager reading</span>
+                </div>
+                <div class="bar-stack">
+                  <div class="bar-row"><span>North Belt</span><div class="bar"><div class="fill" style="width: 81%"></div></div><span>81</span></div>
+                  <div class="bar-row"><span>West Corr.</span><div class="bar"><div class="fill" style="width: 68%"></div></div><span>68</span></div>
+                  <div class="bar-row"><span>South Arc</span><div class="bar"><div class="fill" style="width: 44%"></div></div><span>44</span></div>
+                  <div class="bar-row"><span>Urban Core</span><div class="bar"><div class="fill" style="width: 73%"></div></div><span>73</span></div>
+                </div>
+                <p class="caption">A dark bar is not success or failure by itself. It indicates concentration of activity or exception intensity that warrants regional comparison.</p>
+              </section>
+
+              <section class="wire-panel">
+                <div class="wire-head">
+                  <span>Pipeline velocity</span>
+                  <span>Eight refresh intervals</span>
+                </div>
+                <div class="timeline" aria-hidden="true">
+                  <span style="height: 38%"></span>
+                  <span style="height: 62%"></span>
+                  <span style="height: 46%"></span>
+                  <span style="height: 75%"></span>
+                  <span style="height: 88%"></span>
+                  <span style="height: 70%"></span>
+                  <span style="height: 58%"></span>
+                  <span style="height: 82%"></span>
+                </div>
+                <p class="caption">The manager reads for stalls. A sharp rise in submissions followed by flat callback completion is a process handoff problem, not a route productivity problem.</p>
+              </section>
+
+              <section class="wire-panel">
+                <div class="wire-head">
+                  <span>Alert tiles</span>
+                  <span>Prioritized exceptions</span>
+                </div>
+                <div class="alert-stack">
+                  <div class="alert-row">
+                    <div><strong>Display compliance dip</strong>North Belt launch outlets below threshold in four consecutive checks.</div>
+                    <div class="alert-band"></div>
+                  </div>
+                  <div class="alert-row">
+                    <div><strong>Lead aging risk</strong>West Corridor premium leads waiting beyond the callback tolerance band.</div>
+                    <div class="alert-band"></div>
+                  </div>
+                  <div class="alert-row">
+                    <div><strong>Timestamp drift cluster</strong>Three devices report delayed sync beyond acceptable audit window.</div>
+                    <div class="alert-band"></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="wire-panel">
+                <div class="wire-head">
+                  <span>Quality control</span>
+                  <span>Trust indicators</span>
+                </div>
+                <ul>
+                  <li>Schema failures held outside manager views until corrected.</li>
+                  <li>Duplicate signatures logged and linked to source webhook.</li>
+                  <li>Timestamp drift surfaced because a late upload should not impersonate a live event.</li>
+                  <li>Audit log lets UAT users explain why the tile moved.</li>
+                </ul>
+              </section>
+            </div>
+
+            <div class="code-block">
+              <div class="code-note">Refresh example: only publish verified deltas into the Tableau-facing layer</div>
+<pre><code>def publish_refresh(batch):
+    clean = [e for e in batch if e["status"] == "accepted"]
+    upsert_fact_tables(clean)
+    refresh_extract(
+        territories={e["territory_id"] for e in clean},
+        window_minutes=15
+    )</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="actions">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <h2>Panel 05 / Alerts Into Action</h2>
+              <div class="panel-tag">Management moves must stay central</div>
+            </div>
+            <p>The final test of the dashboard is whether it changes management behavior during the day. When an alert tile lights up, the question is not whether the chart is elegant. The question is whether the manager knows what call to make, which role to involve, and what tradeoff to accept. A stockout alert may trigger distributor escalation, branch stock transfer, or route resequencing. A lead aging alert may move callback ownership from local rep to inside sales for a two-hour recovery block. A compliance alert during a campaign burst may justify pausing paid amplification in one district so spend does not outrun field readiness.</p>
+            <p>Because the dashboard preserves audit context, management action can stay sharp instead of defensive. Leaders can see whether an exception is based on one submission or a pattern, whether a route is incomplete because of field conditions or reporting delay, and whether a device drift issue undermines trust in the latest spike. That keeps the conversation practical. A territory manager does not need to ask for another report; she needs enough evidence to reallocate van capacity, coach a supervisor, release a merchandising standby team, or challenge a distributor claim with timestamps in hand.</p>
+            <p>This is also why UAT with power users matters. Experienced managers know the difference between a statistical blip and a route collapsing in slow motion. Their feedback shapes thresholds, tile wording, and drill-down order so the dashboard reflects how the field is actually run. If the alert language is vague, managers will ignore it. If the tile fires too often, the team will work around it. If the refresh is quick but the ownership path is missing, the system simply produces faster uncertainty.</p>
+            <p>In practice, the best management action is often small and immediate rather than dramatic. One extra merchandiser for a launch corridor, one confirmed callback block for aging premium leads, one distributor escalation backed by accepted timestamps, or one corrective note to a field user whose device is drifting can stabilize a territory before the daily review even begins. That is the standard the dashboard is built against: faster, narrower, better-targeted intervention while the field can still respond.</p>
+
+            <div class="action-grid">
+              <article class="ops-card">
+                <div class="metric-label">Manager move 01</div>
+                <strong>Re-sequence the route</strong>
+                <p>When the territory pulse shows concentrated display misses in a launch cluster, the supervisor can pull the next two planned visits forward and send proof of correction before the afternoon sales peak.</p>
+              </article>
+              <article class="ops-card">
+                <div class="metric-label">Manager move 02</div>
+                <strong>Escalate fulfillment now</strong>
+                <p>Repeated stockout submissions from adjacent outlets justify a distributor call and a van dispatch change. Waiting for the evening sheet turns a local issue into a regional stock narrative.</p>
+              </article>
+              <article class="ops-card">
+                <div class="metric-label">Manager move 03</div>
+                <strong>Protect lead momentum</strong>
+                <p>If field demand outruns callback capacity, the manager can assign a recovery block, shift hot leads to inside sales, and keep qualified demand from aging out while the interest is still fresh.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="close">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <h2>Panel 06 / Operating Close</h2>
+              <div class="panel-tag">From observation to controlled intervention</div>
+            </div>
+            <p>The article begins with blindness because that is the real failure mode in field-led revenue operations. Managers are rarely short of activity. They are short of trustworthy timing. A route may be busy, a launch may be funded, and a rep team may be disciplined, but if evidence from the field arrives late or arrives without stable identifiers, leaders still manage from hindsight.</p>
+            <p>The dashboard corrects that by enforcing a simple sequence. Capture the event in the field with secure identifiers. Normalize the submission so unlike sources become comparable. Validate it, remove duplicates, enrich it with route and territory context, and publish only accepted deltas into the Tableau layer. Then show the manager the market in the language she uses to run it: territory pulse, pipeline velocity, alert ownership, and quality status.</p>
+            <p>What matters is not that the system is real time in a technical sense. What matters is that it is fast enough and clean enough to move a decision inside the useful part of the day. If a territory manager can redirect effort, protect demand, and challenge execution gaps while the route is still underway, the dashboard has done its job. If she still waits for a summary sheet, it has not.</p>
+          </div>
+        </section>
+      </article>
+
+      <aside class="sidebar">
+        <section class="sidebar-card">
+          <div class="sidebar-card-inner">
+            <div class="eyebrow">Reading path</div>
+            <nav aria-label="Section navigation">
+              <a href="#blindness">Blind Window</a>
+              <a href="#capture">Signal Intake</a>
+              <a href="#transform">Stream Conditioning</a>
+              <a href="#views">Dashboard Surface</a>
+              <a href="#actions">Alerts Into Action</a>
+              <a href="#close">Operating Close</a>
+            </nav>
+          </div>
+        </section>
+
+        <section class="sidebar-card">
+          <div class="sidebar-card-inner">
+            <div class="eyebrow">Manager checks</div>
+            <p class="deck">Use the dashboard in this order so the field story stays actionable.</p>
+            <div class="mini-metrics">
+              <div class="row"><span>1 / Verify refresh freshness</span><span>&lt; 15 min</span></div>
+              <div class="row"><span>2 / Check open action queue</span><span>12 items</span></div>
+              <div class="row"><span>3 / Confirm trust flags</span><span>2 drift cases</span></div>
+              <div class="row"><span>4 / Intervene by territory</span><span>North first</span></div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>
