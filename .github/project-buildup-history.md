@@ -18,7 +18,7 @@
 - Deliverable: I wrapped up the day with version 1 scope mostly in place. It was not perfect, but it was good enough to keep the project moving. I also left myself a few rough reminders for the next day so I would not have to rediscover the same context again.
 ## 2024-04-10 - Day 3: Scope pass
 
-- Task summary: Quick follow-up: fixed the README section that was missing the setup step — embarrassing oversight.
+- Task summary: Quick follow-up: fixed the README section that was missing the setup step - embarrassing oversight.
 - Deliverable: Should've caught it earlier but better now than later.
 ## 2024-04-11 - Day 4: User stories
 
@@ -54,7 +54,7 @@
 - Deliverable: Ended the day with support artifacts in hand, plus a few side notes on what still needed fixing later. There were still a couple of loose parts, but nothing serious enough to block the next step.
 ## 2024-04-19 - Day 10: Artifacts
 
-- Task summary: Got stuck mid-afternoon and had to regroup — added inline comments in the dense sections — would have been confusing to revisit without them.
+- Task summary: Got stuck mid-afternoon and had to regroup - added inline comments in the dense sections - would have been confusing to revisit without them.
 - Deliverable: Wrapped it up properly this time.
 ## 2024-04-20 - Day 9: Operational rules
 
@@ -62,7 +62,7 @@
 - Deliverable: Small fix, clean result.
 ## 2024-04-21 - Day 10: Artifacts
 
-- Task summary: Weekend fix — the visualizations had overlapping labels in narrow viewports. Adjusted the figure size and padding.
+- Task summary: Weekend fix - the visualizations had overlapping labels in narrow viewports. Adjusted the figure size and padding.
 - Deliverable: Wrapped it up properly this time.
 ## 2024-04-22 - Day 11: Documentation check
 
